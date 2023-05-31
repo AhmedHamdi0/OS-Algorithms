@@ -153,9 +153,9 @@ int SJF_NP(struct process * prs, int n, int *waitingTime)
     process *list = sort_process(prs, n);
 
     int time = 0;
+    int totalWaitingTime = 0;
     int min_index, min_burst;
     int still = 1;
-    int totalWaitingTime = 0;
 
     while(still)
     {
@@ -229,9 +229,6 @@ int Priority_NP(struct process *prs , int n, int *waitingTime)
                 min_priority = list[a].priority;
                 min_index = a;
             }
-
-            waitingTime[min_index] = time - prs[min_index].arrival - prs[min_index].burst;
-            totalWaitingTime += waitingTime[min_index];
         }
 
         if(min_index != -1)
@@ -242,6 +239,9 @@ int Priority_NP(struct process *prs , int n, int *waitingTime)
                 list[min_index].burst--;
                 time++;
             }
+
+            waitingTime[min_index] = time - prs[min_index].arrival - prs[min_index].burst;
+            totalWaitingTime += waitingTime[min_index];
         }
         else
         {
@@ -400,10 +400,10 @@ int RR(process *prs , int n , int quantum, int *waitingTime)
 	for(int k = index ; k < n ; k++)
     {
         if(list[k].arrival == 0)	
-            { 
-                myque.enqueue(list[k]);  
-                index++; 
-            }
+        { 
+            myque.enqueue(list[k]);  
+            index++; 
+        }
     }
 
 	while((index < n) || (myque.is_empty() == false))
@@ -426,7 +426,7 @@ int RR(process *prs , int n , int quantum, int *waitingTime)
 				}
                 else
                 {
-                    // waitingTime[current] = time - prs[current].arrival - prs[current].burst;
+                    waitingTime[current.number] = time - prs[current.number].arrival - prs[current.number].burst;
                 }
 			}
 		}
